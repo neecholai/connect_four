@@ -9,6 +9,7 @@ const WIDTH = 7;
 const HEIGHT = 6;
 
 let currPlayer = 1; // active player: 1 or 2
+let board = [];
 
 /** makeBoard: create in-JS board structure:
  *    board = array of rows, each row is array of cells  (board[y][x])
@@ -16,7 +17,8 @@ let currPlayer = 1; // active player: 1 or 2
 
 function makeBoard() {
   // TODO: set "board" to empty HEIGHT x WIDTH matrix array
-  let board = []; // array of rows, each row is array of cells  (board[y][x])
+  
+  // array of rows, each row is array of cells  (board[y][x])
   
   //Nested loop to initialize board matrix array.
   for (let i = 0; i < HEIGHT; i++) {
@@ -73,9 +75,14 @@ function makeHtmlBoard() {
 
 /** findSpotForCol: given column x, return top empty y (null if filled) */
 
+
 function findSpotForCol(x) {
   // TODO: write the real version of this, rather than always returning 0
-  return 0;
+  for (let y = HEIGHT - 1; y >= 0; y--){
+    let sq = document.getElementById(`${y}-${x}`);
+    if (sq.children.length === 0) return y;
+  }
+  return null;
 }
 
 /** placeInTable: update DOM to place piece into HTML table of board */
@@ -92,13 +99,16 @@ function placeInTable(y, x) {
   let squarePlaced = document.getElementById(`${y}-${x}`);
   squarePlaced.append(circlePlaced);
 
+  board[y][x] = currPlayer;
+
 }
 
 /** endGame: announce game end */
 
 function endGame(msg) {
   // TODO: pop up alert message
-  alert(msg);
+  
+  return alert(msg);
 }
 
 /** handleClick: handle click of column top to play piece */
@@ -117,39 +127,34 @@ function handleClick(evt) {
   // TODO: add line to update in-memory board
   placeInTable(y, x);
 
+  
   // check for win
   if (checkForWin()) {
-    return endGame(`Player ${currPlayer} won!`);
+    endGame(`Player ${currPlayer} won!`);
   }
 
   // check for tie
   // TODO: check if all cells in board are filled; if so call, call endGame
 
   if (checkForTie()) {
-    return endGame('Tie game!');
+    endGame('Tie game!');
   }
-
 
   // switch players
   // TODO: switch currPlayer 1 <-> 2
 
   currPlayer === 1 ? currPlayer = 2 : currPlayer = 1;
-
+  console.log(currPlayer);
 }
 
 //check for tie function
 
 function checkForTie() {
 
-//get entire board and remove top row
-  let wholeBoard = document.getElementsById('board').children;
-  wholeBoard = Array.from(wholeBoard);
-  wholeBoard.shift();
-
 //check if each cell contains the class piece
-  let checkFull = wholeBoard.every(row => {
-    Array.from(row).every(cell => {
-      cell.classList.contains('piece');
+  let checkFull = board.every(row => {
+    return row.every(cell => {
+      return cell !== null;
     });
   });
   return checkFull;
@@ -192,5 +197,4 @@ function checkForWin() {
 
 makeBoard();
 makeHtmlBoard();
-
 
