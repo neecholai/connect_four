@@ -9,7 +9,6 @@ const WIDTH = 7;
 const HEIGHT = 6;
 
 let currPlayer = 1; // active player: 1 or 2
-let board = []; // array of rows, each row is array of cells  (board[y][x])
 
 /** makeBoard: create in-JS board structure:
  *    board = array of rows, each row is array of cells  (board[y][x])
@@ -17,11 +16,12 @@ let board = []; // array of rows, each row is array of cells  (board[y][x])
 
 function makeBoard() {
   // TODO: set "board" to empty HEIGHT x WIDTH matrix array
-
+  let board = []; // array of rows, each row is array of cells  (board[y][x])
+  
   //Nested loop to initialize board matrix array.
-  for (let i = 0; i < HEIGHT; i++){
+  for (let i = 0; i < HEIGHT; i++) {
     let boardRow = [];
-    for (let j = 0; j < WIDTH; j++){
+    for (let j = 0; j < WIDTH; j++) {
       boardRow.push(null);
     }
     board.push(boardRow);
@@ -83,20 +83,22 @@ function findSpotForCol(x) {
 function placeInTable(y, x) {
   // TODO: make a div and insert into correct table cell
   let circlePlaced = document.createElement('div');
+
+  //after div is created add piece class and player class
   currPlayer === 1 ? circlePlaced.classList.add("p1") : circlePlaced.classList.add("p2");
   circlePlaced.classList.add("piece");
+
+  //add piece to square
   let squarePlaced = document.getElementById(`${y}-${x}`);
   squarePlaced.append(circlePlaced);
 
-
-  //p1 is red, p2 is blue.
-  // Depending on who current player is, add class to div
 }
 
 /** endGame: announce game end */
 
 function endGame(msg) {
   // TODO: pop up alert message
+  alert(msg);
 }
 
 /** handleClick: handle click of column top to play piece */
@@ -123,8 +125,34 @@ function handleClick(evt) {
   // check for tie
   // TODO: check if all cells in board are filled; if so call, call endGame
 
+  if (checkForTie()) {
+    return endGame('Tie game!');
+  }
+
+
   // switch players
   // TODO: switch currPlayer 1 <-> 2
+
+  currPlayer === 1 ? currPlayer = 2 : currPlayer = 1;
+
+}
+
+//check for tie function
+
+function checkForTie() {
+
+//get entire board and remove top row
+  let wholeBoard = document.getElementsById('board').children;
+  wholeBoard = Array.from(wholeBoard);
+  wholeBoard.shift();
+
+//check if each cell contains the class piece
+  let checkFull = wholeBoard.every(row => {
+    Array.from(row).every(cell => {
+      cell.classList.contains('piece');
+    });
+  });
+  return checkFull;
 }
 
 /** checkForWin: check board cell-by-cell for "does a win start here?" */
@@ -146,6 +174,7 @@ function checkForWin() {
   }
 
   // TODO: read and understand this code. Add comments to help you.
+  //check to see if there's four in a row anywhere on the board
 
   for (let y = 0; y < HEIGHT; y++) {
     for (let x = 0; x < WIDTH; x++) {
@@ -163,3 +192,5 @@ function checkForWin() {
 
 makeBoard();
 makeHtmlBoard();
+
+
