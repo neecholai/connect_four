@@ -17,7 +17,7 @@ let board = [];
 
 function makeBoard() {
   // TODO: set "board" to empty HEIGHT x WIDTH matrix array
-  
+    board = [];
   // array of rows, each row is array of cells  (board[y][x])
   
   //Nested loop to initialize board matrix array.
@@ -106,8 +106,18 @@ function placeInTable(y, x) {
 /** endGame: announce game end */
 
 function endGame(msg) {
-  // TODO: pop up alert message
   
+  //create new html board and remove old board
+  let htmlBoard = document.getElementById('board');
+  htmlBoard.remove();
+  htmlBoard = document.createElement('table');
+  htmlBoard.id = 'board';
+  let game = document.getElementById('game');
+  game.appendChild(htmlBoard);
+  makeBoard();
+  makeHtmlBoard();
+  
+  // TODO: pop up alert message
   return alert(msg);
 }
 
